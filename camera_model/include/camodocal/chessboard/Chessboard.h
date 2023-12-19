@@ -4,6 +4,10 @@
 #include <boost/shared_ptr.hpp>
 #include <opencv2/core/core.hpp>
 
+// for opencv4
+#include <opencv4/opencv2/imgproc/types_c.h>
+#include <opencv4/opencv2/calib3d/calib3d_c.h>
+
 namespace camodocal
 {
 

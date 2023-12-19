@@ -666,7 +666,6 @@ bool Estimator::failureDetection()
     return false;
 }
 
-
 void Estimator::optimization()
 {
     ceres::Problem problem;

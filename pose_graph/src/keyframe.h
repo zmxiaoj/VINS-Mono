@@ -13,6 +13,10 @@
 #include "ThirdParty/DBoW/DBoW2.h"
 #include "ThirdParty/DVision/DVision.h"
 
+// for opencv4
+#include <opencv4/opencv2/imgproc/types_c.h>
+#include <opencv4/opencv2/imgproc/imgproc_c.h>
+
 #define MIN_LOOP_NUM 25
 
 using namespace Eigen;

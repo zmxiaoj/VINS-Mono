@@ -24,6 +24,9 @@
 #include "ThirdParty/DBoW/TemplatedDatabase.h"
 #include "ThirdParty/DBoW/TemplatedVocabulary.h"
 
+// for opencv4
+#include <opencv4/opencv2/imgproc/types_c.h>
+#include <opencv4/opencv2/imgproc/imgproc_c.h>
 
 #define SHOW_S_EDGE false
 #define SHOW_L_EDGE true

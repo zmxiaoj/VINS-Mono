@@ -33,6 +33,10 @@
 #include <vector>
 #include <boost/dynamic_bitset.hpp>
 
+// for opencv4
+#include <opencv4/opencv2/imgproc/types_c.h>
+#include <opencv4/opencv2/imgproc/imgproc_c.h>
+
 namespace DVision {
 
 /// BRIEF descriptor
