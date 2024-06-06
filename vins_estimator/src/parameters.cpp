@@ -58,7 +58,7 @@ void readParameters(ros::NodeHandle &n)
 
     std::string OUTPUT_PATH;
     fsSettings["output_path"] >> OUTPUT_PATH;
-    VINS_RESULT_PATH = OUTPUT_PATH + "/vins_result_no_loop.csv";
+    VINS_RESULT_PATH = OUTPUT_PATH + "/vins_result_no_loop.txt";
     std::cout << "result path " << VINS_RESULT_PATH << std::endl;
 
     // create folder if not exists
@@ -82,7 +82,7 @@ void readParameters(ros::NodeHandle &n)
         ROS_WARN("have no prior about extrinsic param, calibrate extrinsic param");
         RIC.push_back(Eigen::Matrix3d::Identity());
         TIC.push_back(Eigen::Vector3d::Zero());
-        EX_CALIB_RESULT_PATH = OUTPUT_PATH + "/extrinsic_parameter.csv";
+        EX_CALIB_RESULT_PATH = OUTPUT_PATH + "/extrinsic_parameter.yaml";
 
     }
     else 
@@ -90,7 +90,7 @@ void readParameters(ros::NodeHandle &n)
         if ( ESTIMATE_EXTRINSIC == 1)
         {
             ROS_WARN(" Optimize extrinsic param around initial guess!");
-            EX_CALIB_RESULT_PATH = OUTPUT_PATH + "/extrinsic_parameter.csv";
+            EX_CALIB_RESULT_PATH = OUTPUT_PATH + "/extrinsic_parameter.yaml";
         }
         if (ESTIMATE_EXTRINSIC == 0)
             ROS_WARN(" fix extrinsic param ");
