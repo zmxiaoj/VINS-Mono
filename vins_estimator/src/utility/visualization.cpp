@@ -177,7 +177,7 @@ void pubOdometry(const Estimator &estimator, const std_msgs::Header &header)
             << tmp_Q.x() << " "
             << tmp_Q.y() << " "
             << tmp_Q.z() << " "
-            << tmp_Q.w() << " " << endl;
+            << tmp_Q.w() << endl;
         foutC.close();
     }
 }

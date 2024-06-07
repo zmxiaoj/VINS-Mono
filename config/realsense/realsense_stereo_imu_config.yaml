@@ -3,7 +3,7 @@
 #common parameters
 imu_topic: "/camera/imu"
 image_topic: "/camera/infra1/image_rect_raw"
-output_path: "/home/zmxj/code/vins_ws/src/output/"
+output_path: "/home/zmxj/code/vins_ws/src/output/realsense/"
 
 #camera calibration 
 model_type: PINHOLE
@@ -42,7 +42,7 @@ extrinsicTranslation: !!opencv-matrix
    data: [-0.0302200000733137, 0.00740000000223517, 0.0160199999809265]
 
 #feature traker paprameters
-max_cnt: 25            # max feature number in feature tracking
+max_cnt: 150            # max feature number in feature tracking
 min_dist: 25            # min distance between two features 
 freq: 15               # frequence (Hz) of publish tracking result. At least 10Hz for good estimation. If set 0, the frequence will be same as raw image 
 F_threshold: 1.0        # ransac threshold (pixel)
@@ -64,9 +64,9 @@ g_norm: 9.805       # gravity magnitude
 
 #loop closure parameters
 loop_closure: 1                    # start loop closure
-fast_relocalization: 0             # useful in real-time and large project
+fast_relocalization: 1             # useful in real-time and large project
 load_previous_pose_graph: 0        # load and reuse previous pose graph; load from 'pose_graph_save_path'
-pose_graph_save_path: "/home/zmxj/code/vins_ws/src/output/pose_graph/NMB/" # save and load path
+pose_graph_save_path: "/home/zmxj/code/vins_ws/src/output/pose_graph/realsense/" # save and load path
 
 #unsynchronization parameters
 estimate_td: 1                      # online estimate time offset between camera and imu
