@@ -78,6 +78,16 @@ void FeatureTracker::addPoints()
     }
 }
 
+/**
+ * @brief 图像预处理
+ * 1.图像均衡化
+ * 2.光流追踪
+ * 3.提取新的特征点
+ * 4.特征点去畸变，计算速度
+ * 
+ * @param[in] _img 输入图像
+ * @param[in] _cur_time 图像时间戳
+ */
 void FeatureTracker::readImage(const cv::Mat &_img, double _cur_time)
 {
     cv::Mat img;
@@ -86,6 +96,7 @@ void FeatureTracker::readImage(const cv::Mat &_img, double _cur_time)
 
     if (EQUALIZE)
     {
+        // 图像均衡化，避免过暗或过亮的图像，提高特征点检测的准确性
         cv::Ptr<cv::CLAHE> clahe = cv::createCLAHE(3.0, cv::Size(8, 8));
         TicToc t_c;
         clahe->apply(_img, img);
@@ -94,6 +105,7 @@ void FeatureTracker::readImage(const cv::Mat &_img, double _cur_time)
     else
         img = _img;
 
+    // forw表示下一帧，cur表示当前帧，prev表示上一帧
     if (forw_img.empty())
     {
         prev_img = cur_img = forw_img = img;
@@ -103,6 +115,7 @@ void FeatureTracker::readImage(const cv::Mat &_img, double _cur_time)
         forw_img = img;
     }
 
+    // clear forw中特征点信息
     forw_pts.clear();
 
     if (cur_pts.size() > 0)
@@ -110,11 +123,13 @@ void FeatureTracker::readImage(const cv::Mat &_img, double _cur_time)
         TicToc t_o;
         vector<uchar> status;
         vector<float> err;
+        // 多层金字塔LK光流追踪
         cv::calcOpticalFlowPyrLK(cur_img, forw_img, cur_pts, forw_pts, status, err, cv::Size(21, 21), 3);
 
         for (int i = 0; i < int(forw_pts.size()); i++)
             if (status[i] && !inBorder(forw_pts[i]))
                 status[i] = 0;
+        // 根据status对特征点容器进行筛选
         reduceVector(prev_pts, status);
         reduceVector(cur_pts, status);
         reduceVector(forw_pts, status);
@@ -124,6 +139,7 @@ void FeatureTracker::readImage(const cv::Mat &_img, double _cur_time)
         ROS_DEBUG("temporal optical flow costs: %fms", t_o.toc());
     }
 
+    // 统计追踪次数
     for (auto &n : track_cnt)
         n++;
 
@@ -166,6 +182,10 @@ void FeatureTracker::readImage(const cv::Mat &_img, double _cur_time)
     prev_time = cur_time;
 }
 
+/**
+ * @brief 使用基础矩阵F进行特征点筛选
+ * 
+ */
 void FeatureTracker::rejectWithF()
 {
     if (forw_pts.size() >= 8)
@@ -176,6 +196,7 @@ void FeatureTracker::rejectWithF()
         for (unsigned int i = 0; i < cur_pts.size(); i++)
         {
             Eigen::Vector3d tmp_p;
+            // 得到相机归一化坐标系的值
             m_camera->liftProjective(Eigen::Vector2d(cur_pts[i].x, cur_pts[i].y), tmp_p);
             tmp_p.x() = FOCAL_LENGTH * tmp_p.x() / tmp_p.z() + COL / 2.0;
             tmp_p.y() = FOCAL_LENGTH * tmp_p.y() / tmp_p.z() + ROW / 2.0;
@@ -213,6 +234,11 @@ bool FeatureTracker::updateID(unsigned int i)
         return false;
 }
 
+/**
+ * @brief 读取相机内参
+ * 
+ * @param calib_file 
+ */
 void FeatureTracker::readIntrinsicParameter(const string &calib_file)
 {
     ROS_INFO("reading paramerter of camera %s", calib_file.c_str());
